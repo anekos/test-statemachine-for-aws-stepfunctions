@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Watch Step Functions Statemachine State
+
+Globals:
+  Function:
+    Tags:
+      Stage: production
+
+Resources:
+
+  StateMachine:
+    Type: AWS::Serverless::StateMachine
+    Properties:
+      DefinitionUri: statemachine.yaml
+      Role: !GetAtt StateMachineRole.Arn
+      Tags:
+        Name: test-statemachine
+        Stage: staging
+
+  StateMachineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - states.amazonaws.com
+                - !Sub 'states.${AWS::Region}.amazonaws.com'
+                # - events.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: lambda
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                # Resource: !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:*:*'
+                Resource: '*'
+                Action:
+                  - lambda:InvokeAsync
+                  - lambda:InvokeFunction

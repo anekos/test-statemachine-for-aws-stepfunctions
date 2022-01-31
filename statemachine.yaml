@@ -1,0 +1,23 @@
+---
+Comment: Batch
+StartAt: First
+States:
+
+  First:
+    Type: Pass
+    Next: Second
+
+  Second:
+    Type: Choice
+    Choices:
+      - StringEquals: 'ok'
+        Variable: $.state
+        Next: OK
+    Default: NG
+
+  OK:
+    Type: Pass
+    End: True
+
+  NG:
+    Type: Fail
