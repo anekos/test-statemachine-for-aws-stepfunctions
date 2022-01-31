@@ -12,6 +12,7 @@ Resources:
   StateMachine:
     Type: AWS::Serverless::StateMachine
     Properties:
+      Name: test.statemachine
       DefinitionUri: statemachine.yaml
       Role: !GetAtt StateMachineRole.Arn
       Tags:
